@@ -1,0 +1,19 @@
+---
+services:
+  sut:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: |
+      sh -c '
+        set -euo pipefail
+        # Use $$ to prevent interpolation 
+        if [ $$(id -u) -ne 1000 ]; then
+          exit 1
+        fi
+        base64 --version # coreutils
+        curl --version # curl
+        git --version # git
+        pip --version # py3-pip
+        python --version # python3
+      '

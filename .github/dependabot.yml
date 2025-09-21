@@ -1,0 +1,17 @@
+---
+version: 2
+updates:
+  - package-ecosystem: "docker"
+    directory: "/md"
+    schedule:
+      interval: "daily"
+    commit-message:
+      prefix: chore(deps)
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "daily"
+    cooldown:
+      default-days: 7
+    commit-message:
+      prefix: ci(deps)
