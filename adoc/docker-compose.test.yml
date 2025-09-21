@@ -11,6 +11,8 @@ services:
         if [ $$(id -u) -ne 1000 ]; then
           exit 1
         fi
+        asciidoc --version # asciidoc
+        asciidoctor --version # asciidoctor
         base64 --version # coreutils
         curl --version # curl
         git --version # git
