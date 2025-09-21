@@ -17,13 +17,13 @@ Let's say that you want to convert an AsciiDoc file intput.adoc in your current 
 **Mac/Linux**
 
 ```bash
-cat intput.adoc | docker run --rm -i --net=none leplusorg/adoc asciidoc -o - > output.html
+cat intput.adoc | docker run --rm -i --net=none leplusorg/adoc asciidoctor -o - - > output.html
 ```
 
 **Windows**
 
 ```batch
-type intput.adoc | docker run --rm -i --net=none leplusorg/adoc asciidoc -o - > output.html
+type intput.adoc | docker run --rm -i --net=none leplusorg/adoc asciidoctor -o - - > output.html
 ```
 
 ## Example using the filesystem
@@ -33,7 +33,7 @@ Same thing, assuming that you want to convert an AsciiDoc file intput.adoc in yo
 **Mac/Linux**
 
 ```bash
-docker run --rm -t --user="$(id -u):$(id -g)" --net=none -v "$(pwd):/tmp" leplusorg/adoc asciidoc -o output.html intput.adoc
+docker run --rm -t --user="$(id -u):$(id -g)" --net=none -v "$(pwd):/tmp" leplusorg/adoc asciidoctor -o output.html intput.adoc
 ```
 
 **Windows**
@@ -41,13 +41,13 @@ docker run --rm -t --user="$(id -u):$(id -g)" --net=none -v "$(pwd):/tmp" leplus
 In `cmd`:
 
 ```batch
-docker run --rm -t --net=none -v "%cd%:/tmp" leplusorg/adoc asciidoc -o output.html intput.adoc
+docker run --rm -t --net=none -v "%cd%:/tmp" leplusorg/adoc asciidoctor -o output.html intput.adoc
 ```
 
 In PowerShell:
 
 ```pwsh
-docker run --rm -t --net=none -v "${PWD}:/tmp" leplusorg/adoc asciidoc -o output.html intput.adoc
+docker run --rm -t --net=none -v "${PWD}:/tmp" leplusorg/adoc asciidoctor -o output.html intput.adoc
 ```
 
 ## Software Bill of Materials (SBOM)
