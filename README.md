@@ -1,6 +1,6 @@
 # AsciiDoc
 
-Multi-platform Docker container with utilities to process AsciiDoc files (`a2x`, `asciidoc`, `asciidoctor`...).
+Multi-platform Docker container with utilities to process AsciiDoc files (`asciidoc`, `a2x`, `ascidoctor`...).
 
 [![Dockerfile](https://img.shields.io/badge/GitHub-Dockerfile-blue)](adoc/Dockerfile)
 [![Docker Build](https://github.com/leplusorg/docker-adoc/workflows/Docker/badge.svg)](https://github.com/leplusorg/docker-adoc/actions?query=workflow:"Docker")
