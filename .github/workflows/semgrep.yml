@@ -1,0 +1,45 @@
+---
+name: Semgrep
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+  schedule:
+    - cron: "0 0 * * 0"
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  semgrep:
+    permissions:
+      # Required to read the repo
+      contents: read
+    runs-on: ubuntu-latest
+    container:
+      image: semgrep/semgrep@a75351be60066afed4c00ece21967529b8013577035cbfe88a919d4a20359e5e # 1.137.1-nonroot
+    steps:
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          persist-credentials: false
+      - name: Run Semgrep for PR
+        if: ${{ github.event_name == 'pull_request' && github.event.pull_request.user.login != 'dependabot[bot]' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          IFS=$'\n\t'
+          semgrep ci --baseline-commit --code --error
+      - name: Run Semgrep for push
+        if: ${{ github.event_name != 'pull_request' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          IFS=$'\n\t'
+          semgrep scan --code --sarif --sarif-output=semgrep-results.sarif
+      - name: Upload Semgrep scan results to GitHub Security tab
+        if: ${{ github.event_name != 'pull_request' }}
+        uses: github/codeql-action/upload-sarif@192325c86100d080feab897ff886c34abd4c83a3 # v3.29.5
+        with:
+          sarif_file: semgrep-results.sarif

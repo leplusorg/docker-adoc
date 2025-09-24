@@ -1,0 +1,16 @@
+rulesets:
+  - p/c                  # general correctness checks
+  - p/ci                 # CI/CD security and misconfiguration checks
+  - p/docker             # Dockerfile security and best practices
+  - p/expressjs          # Express.js (Node.js framework) security rules
+  - p/flask              # Flask (Python web framework) security rules
+  - p/insecure-transport # insecure protocols/transport checks
+  - p/jwt                # JWT misuse
+  - p/lang               # general language-specific checks
+  - p/python             # Python-specific rules
+  - p/r2c                # r2c published rules (various categories)
+  - p/react              # React-specific rules
+  - p/ruby               # Ruby-specific rules
+  - p/secrets            # hardcoded secrets detection
+  - p/security-audit     # broad security-focused rules
+  - p/sql                # SQL injection and unsafe query building
