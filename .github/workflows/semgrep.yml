@@ -30,14 +30,44 @@ jobs:
         run: |
           set -euo pipefail
           IFS=$'\n\t'
-          semgrep ci --baseline-commit --code --error --config .semgrep.yml
+          semgrep ci --baseline-commit --code --error \
+            --config p/c \
+            --config p/ci \
+            --config p/docker \
+            --config p/expressjs \
+            --config p/flask \
+            --config p/insecure-transport \
+            --config p/jwt \
+            --config p/lang \
+            --config p/python \
+            --config p/r2c \
+            --config p/react \
+            --config p/ruby \
+            --config p/secrets \
+            --config p/security-audit \
+            --config p/sql
       - name: Run Semgrep for push
         if: ${{ github.event_name != 'pull_request' }}
         shell: bash
         run: |
           set -euo pipefail
           IFS=$'\n\t'
-          semgrep scan --sarif --sarif-output=semgrep-results.sarif --config .semgrep.yml
+          semgrep scan --sarif --sarif-output=semgrep-results.sarif \
+            --config p/c \
+            --config p/ci \
+            --config p/docker \
+            --config p/expressjs \
+            --config p/flask \
+            --config p/insecure-transport \
+            --config p/jwt \
+            --config p/lang \
+            --config p/python \
+            --config p/r2c \
+            --config p/react \
+            --config p/ruby \
+            --config p/secrets \
+            --config p/security-audit \
+            --config p/sql
       - name: Upload Semgrep scan results to GitHub Security tab
         if: ${{ github.event_name != 'pull_request' }}
         uses: github/codeql-action/upload-sarif@192325c86100d080feab897ff886c34abd4c83a3 # v3.29.5
