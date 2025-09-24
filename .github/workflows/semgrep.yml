@@ -37,7 +37,7 @@ jobs:
         run: |
           set -euo pipefail
           IFS=$'\n\t'
-          semgrep scan --code --sarif --sarif-output=semgrep-results.sarif
+          semgrep scan --sarif --sarif-output=semgrep-results.sarif
       - name: Upload Semgrep scan results to GitHub Security tab
         if: ${{ github.event_name != 'pull_request' }}
         uses: github/codeql-action/upload-sarif@192325c86100d080feab897ff886c34abd4c83a3 # v3.29.5
