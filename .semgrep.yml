@@ -1,4 +1,5 @@
-rulesets:
+---
+configs:
   - p/c # general correctness checks
   - p/ci # CI/CD security and misconfiguration checks
   - p/docker # Dockerfile security and best practices
