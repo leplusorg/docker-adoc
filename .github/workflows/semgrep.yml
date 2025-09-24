@@ -17,6 +17,8 @@ jobs:
     permissions:
       # Required to read the repo
       contents: read
+      # Required to upload the SARIF file to the security tab
+      security-events: write
     runs-on: ubuntu-latest
     container:
       image: semgrep/semgrep
