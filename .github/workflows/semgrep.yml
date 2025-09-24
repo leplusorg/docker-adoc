@@ -19,7 +19,7 @@ jobs:
       contents: read
     runs-on: ubuntu-latest
     container:
-      image: semgrep/semgrep:1.137.1-nonroot@sha256:a75351be60066afed4c00ece21967529b8013577035cbfe88a919d4a20359e5e
+      image: semgrep/semgrep:1.137.1@sha256:a75351be60066afed4c00ece21967529b8013577035cbfe88a919d4a20359e5e
     steps:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
         with:
