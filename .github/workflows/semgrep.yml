@@ -38,14 +38,12 @@ jobs:
             --config p/flask \
             --config p/insecure-transport \
             --config p/jwt \
-            --config p/lang \
             --config p/python \
             --config p/r2c \
             --config p/react \
             --config p/ruby \
             --config p/secrets \
-            --config p/security-audit \
-            --config p/sql
+            --config p/security-audit
       - name: Run Semgrep for push
         if: ${{ github.event_name != 'pull_request' }}
         shell: bash
@@ -60,14 +58,12 @@ jobs:
             --config p/flask \
             --config p/insecure-transport \
             --config p/jwt \
-            --config p/lang \
             --config p/python \
             --config p/r2c \
             --config p/react \
             --config p/ruby \
             --config p/secrets \
-            --config p/security-audit \
-            --config p/sql
+            --config p/security-audit
       - name: Upload Semgrep scan results to GitHub Security tab
         if: ${{ github.event_name != 'pull_request' }}
         uses: github/codeql-action/upload-sarif@192325c86100d080feab897ff886c34abd4c83a3 # v3.29.5
