@@ -12,28 +12,28 @@ Multi-platform Docker container with utilities to process AsciiDoc files (`ascii
 
 ## Example without using the filesystem
 
-Let's say that you want to convert an AsciiDoc file intput.adoc in your current working directory to HTML:
+Let's say that you want to convert an AsciiDoc file input.adoc in your current working directory to HTML:
 
 **Mac/Linux**
 
 ```bash
-cat intput.adoc | docker run --rm -i --net=none leplusorg/adoc asciidoctor -o - - > output.html
+cat input.adoc | docker run --rm -i --net=none leplusorg/adoc asciidoctor -o - - > output.html
 ```
 
 **Windows**
 
 ```batch
-type intput.adoc | docker run --rm -i --net=none leplusorg/adoc asciidoctor -o - - > output.html
+type input.adoc | docker run --rm -i --net=none leplusorg/adoc asciidoctor -o - - > output.html
 ```
 
 ## Example using the filesystem
 
-Same thing, assuming that you want to convert an AsciiDoc file intput.adoc in your current working directory to HTML:
+Same thing, assuming that you want to convert an AsciiDoc file input.adoc in your current working directory to HTML:
 
 **Mac/Linux**
 
 ```bash
-docker run --rm -t --user="$(id -u):$(id -g)" --net=none -v "$(pwd):/tmp" leplusorg/adoc asciidoctor -o output.html intput.adoc
+docker run --rm -t --user="$(id -u):$(id -g)" --net=none -v "$(pwd):/tmp" leplusorg/adoc asciidoctor -o output.html input.adoc
 ```
 
 **Windows**
@@ -41,13 +41,13 @@ docker run --rm -t --user="$(id -u):$(id -g)" --net=none -v "$(pwd):/tmp" leplus
 In `cmd`:
 
 ```batch
-docker run --rm -t --net=none -v "%cd%:/tmp" leplusorg/adoc asciidoctor -o output.html intput.adoc
+docker run --rm -t --net=none -v "%cd%:/tmp" leplusorg/adoc asciidoctor -o output.html input.adoc
 ```
 
 In PowerShell:
 
 ```pwsh
-docker run --rm -t --net=none -v "${PWD}:/tmp" leplusorg/adoc asciidoctor -o output.html intput.adoc
+docker run --rm -t --net=none -v "${PWD}:/tmp" leplusorg/adoc asciidoctor -o output.html input.adoc
 ```
 
 ## Software Bill of Materials (SBOM)
@@ -74,11 +74,11 @@ docker buildx imagetools inspect leplusorg/adoc --format '{{ json .Provenance }}
 
 [Sigstore](https://docs.sigstore.dev) is trying to improve supply
 chain security by allowing you to verify the origin of an
-artifcat. You can verify that the image that you use was actually
+artifact. You can verify that the image that you use was actually
 produced by this repository. This means that if you verify the
 signature of the Docker image, you can trust the integrity of the
 whole supply chain from code source, to CI/CD build, to distribution
-on Maven Central or whever you got the image from.
+on Maven Central or wherever you got the image from.
 
 You can use the following command to verify the latest image using its
 sigstore signature attestation:
