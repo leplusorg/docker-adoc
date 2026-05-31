@@ -35,6 +35,8 @@ jobs:
             echo "No pinned packages found in ${IMAGE}/Dockerfile" >&2
             exit 1
           fi
+          echo "Pinned packages:"
+          echo "${PINNED}"
           UPGRADABLE=$(docker run --pull always --rm --user root --entrypoint /bin/sh "leplusorg/${IMAGE}:main" -c 'apk update >/dev/null 2>&1 && apk -u list 2>/dev/null')
           OUTDATED=""
           for pkg in ${PINNED}; do
