@@ -1,0 +1,88 @@
+---
+name: AsciiDoc
+description: >-
+  Run AsciiDoc tools (asciidoctor, asciidoc, a2x, git, curl...) from the
+  leplusorg/adoc container image inside a GitHub workflow.
+author: Thomas Leplus
+
+branding:
+  icon: file-text
+  color: blue
+
+inputs:
+  args:
+    description: >-
+      Command to run inside the container, for example
+      "asciidoctor -o output.html input.adoc". The value is interpreted by
+      /bin/sh, so pipes, redirects and multiple commands are supported.
+    required: true
+  version:
+    description: >-
+      Tag of the leplusorg/adoc image to run, for example "3.24.1". Defaults to
+      the version this action was pinned to (a "vX.Y.Z" ref maps to image
+      "X.Y.Z"), falling back to "latest".
+    required: false
+    default: ""
+  workdir:
+    description: >-
+      Directory, relative to the workspace ($GITHUB_WORKSPACE), in which to run
+      the command. Defaults to the workspace root.
+    required: false
+    default: "."
+  network:
+    description: >-
+      Docker network mode for the container. Use "none" for a hermetic run
+      with no network access.
+    required: false
+    default: default
+
+runs:
+  using: composite
+  steps:
+    - name: Run AsciiDoc tools
+      shell: bash
+      # The inputs are exposed as environment variables and never interpolated
+      # into the script below, so an input value cannot inject a command into
+      # the runner's shell. The command in "args" is only ever evaluated by the
+      # sandboxed container, not by the runner.
+      env:
+        INPUT_ARGS: ${{ inputs.args }}
+        INPUT_VERSION: ${{ inputs.version }}
+        INPUT_WORKDIR: ${{ inputs.workdir }}
+        INPUT_NETWORK: ${{ inputs.network }}
+        INPUT_REF: ${{ github.action_ref }}
+      run: |
+        set -euo pipefail
+        IFS=$'\n\t'
+
+        # Resolve which image tag to run. Explicit "version" wins; otherwise
+        # derive it from the ref the action was pinned to (v3.24.1 -> 3.24.1)
+        # so that "uses: leplusorg/docker-adoc@vX.Y.Z" runs image "X.Y.Z" and
+        # the GitHub release and Docker Hub versions stay in lock-step. Any
+        # other ref (a branch, a commit SHA, a local "./" checkout) falls back
+        # to the released "latest" image.
+        version="${INPUT_VERSION}"
+        if [ -z "${version}" ]; then
+          case "${INPUT_REF:-}" in
+            v[0-9]*) version="${INPUT_REF#v}" ;;
+            *) version="latest" ;;
+          esac
+        fi
+
+        # Reject anything that is not a valid Docker tag so the value can never
+        # turn into extra "docker run" arguments.
+        if ! printf '%s' "${version}" | \grep -Eq '^[A-Za-z0-9_][A-Za-z0-9_.-]*$'; then
+          echo "::error::Invalid version '${version}'." >&2
+          exit 1
+        fi
+
+        image="leplusorg/adoc:${version}"
+        docker run --rm \
+          --network "${INPUT_NETWORK}" \
+          --security-opt no-new-privileges \
+          --user "$(id -u):$(id -g)" \
+          --volume "${GITHUB_WORKSPACE}:/workspace" \
+          --workdir "/workspace/${INPUT_WORKDIR}" \
+          --env HOME=/tmp \
+          "${image}" \
+          sh -c "${INPUT_ARGS}"

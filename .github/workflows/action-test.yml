@@ -1,0 +1,41 @@
+---
+name: Action
+
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron: "0 0 * * 0"
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  action-test:
+    name: Test the GitHub Action
+    runs-on: ubuntu-latest
+    permissions:
+      # Required to clone the repo so the local action can be used.
+      contents: read
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+      - name: Create a sample AsciiDoc file
+        shell: bash
+        run: |
+          set -euo pipefail
+          IFS=$'\n\t'
+          printf '= Hello\n\nWorld from *AsciiDoc*.\n' > input.adoc
+      - name: Convert the file with the action
+        uses: ./
+        with:
+          args: asciidoctor -o output.html input.adoc
+      - name: Check that the output was produced
+        shell: bash
+        run: |
+          set -euo pipefail
+          IFS=$'\n\t'
+          test -s output.html
+          grep -q "World from" output.html

@@ -50,6 +50,81 @@ In PowerShell:
 docker run --rm -t --net=none -v "${PWD}:/tmp" leplusorg/adoc asciidoctor -o output.html input.adoc
 ```
 
+## Use as a GitHub Action
+
+This repository is also a GitHub Action, so you can run any of the tools
+bundled in the image (`asciidoctor`, `asciidoc`, `a2x`, `git`, `curl`...)
+directly in a workflow, without writing your own `docker run` command.
+
+```yaml
+jobs:
+  build-docs:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v5
+      - name: Convert AsciiDoc to HTML
+        uses: leplusorg/docker-adoc@v3.24.1
+        with:
+          args: asciidoctor -o output.html input.adoc
+```
+
+The command runs against your checked-out repository (`$GITHUB_WORKSPACE`),
+as the workflow's own user, so any files it produces (such as `output.html`
+above) are written back next to your sources and owned by the runner user.
+
+### Choosing the version
+
+The action runs the `leplusorg/adoc` image whose tag matches the ref you pin
+the action to: `leplusorg/docker-adoc@v3.24.1` runs image `leplusorg/adoc:3.24.1`.
+Because the image version, the GitHub release and the git tag are always the
+same value, pinning the action to a release gives you a reproducible tool set
+without any extra configuration. Any other ref (a branch, a commit SHA, or a
+local `./` checkout) falls back to the `latest` released image, and you can
+always select a specific tag explicitly with the `version` input.
+
+### Inputs
+
+| Input     | Required | Default              | Description                                                                                                     |
+| --------- | -------- | -------------------- | -------------------------------------------------------------------------------------------------------------- |
+| `args`    | yes      |                      | Command to run inside the container. Interpreted by `/bin/sh`, so pipes, redirects and multiple commands work. |
+| `version` | no       | pinned ref / `latest` | Tag of the `leplusorg/adoc` image to run, e.g. `3.24.1`.                                                       |
+| `workdir` | no       | `.`                  | Directory, relative to the workspace, in which to run the command.                                             |
+| `network` | no       | `default`            | Docker network mode. Set to `none` for a hermetic run with no network access.                                  |
+
+### Security
+
+This action is designed to minimise supply-chain risk for its users:
+
+- It runs a **released, version-tagged** image of `leplusorg/adoc`. A full
+  version tag such as `3.24.1` only ever points at the single build that was
+  published for that release, so pinning the action to `@v3.24.1` gives you a
+  stable, reproducible image.
+- The `args` input is passed to the container through an environment variable
+  and is **never interpolated into the runner's shell**, so it cannot inject
+  commands into the runner. Your command is only ever evaluated inside the
+  sandboxed container.
+- The container runs unprivileged (`--security-opt no-new-privileges`, mapped
+  to the workflow user), and its network can be disabled with `network: none`.
+
+For the strongest guarantees, pin the action to a specific release tag (or its
+commit SHA) rather than to `@main`:
+
+```yaml
+      - uses: leplusorg/docker-adoc@v3.24.1
+```
+
+Each `leplusorg/adoc` image is published and signed with [Sigstore](#sigstore)
+by this repository's own workflow, and the released image is exactly the build
+that was tested (it is not rebuilt on release).
+
+### Requirements
+
+The action uses Docker and therefore requires a Linux runner (for example
+`ubuntu-latest`) with Docker available, which is the case for GitHub-hosted
+Linux runners.
+
 ## Software Bill of Materials (SBOM)
 
 To get the SBOM for the latest image (in SPDX JSON format), use the
