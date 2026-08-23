@@ -4,7 +4,6 @@ description: >-
   Run AsciiDoc tools (asciidoctor, asciidoc, a2x, git, curl...) from the
   leplusorg/adoc container image inside a GitHub workflow.
 author: Thomas Leplus
-
 branding:
   icon: file-text
   color: blue

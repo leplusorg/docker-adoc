@@ -93,7 +93,7 @@ always select a specific tag explicitly with the `version` input.
 | `workdir` | no       | `.`                   | Directory, relative to the workspace, in which to run the command.                                             |
 | `network` | no       | `default`             | Docker network mode. Set to `none` for a hermetic run with no network access.                                  |
 
-### Security
+### Action security
 
 This action is designed to minimise supply-chain risk for its users:
 
