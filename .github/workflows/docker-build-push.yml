@@ -41,6 +41,10 @@ jobs:
             type=ref,event=branch
             type=ref,event=pr
             type=sha
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 1
+          persist-credentials: false
       - name: Test the Docker image
         working-directory: ${{ env.IMAGE }}
         shell: bash
@@ -49,10 +53,10 @@ jobs:
           IFS=$'\n\t'
           docker compose -f docker-compose.test.yml run sut
       - name: Build the Docker image
-        uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7.4.0
+        uses: docker/build-push-action@53b7df96c91f9c12dcc8a07bcb9ccacbed38856a # v7.3.0
         with:
           # zizmor: ignore[template-injection] no user input
-          context: ${{ env.IMAGE }}
+          context: "{{defaultContext}}:${{ env.IMAGE }}"
           platforms: linux/amd64,linux/arm64
           pull: true
           push: false
@@ -157,7 +161,7 @@ jobs:
         id: build
         with:
           # zizmor: ignore[template-injection] no user input
-          context: ${{ env.IMAGE }}
+          context: "{{defaultContext}}:${{ env.IMAGE }}"
           platforms: linux/amd64,linux/arm64
           pull: true
           push: true
