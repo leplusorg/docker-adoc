@@ -16,7 +16,7 @@ RUN apk upgrade --no-cache \
     asciidoctor=2.0.26-r0 \
     coreutils=9.11-r0 \
     curl=8.23.0-r0 \
-    git=2.54.0-r0 \
+    git=2.54.1-r0 \
     pipx=1.14.0-r0 \
     py3-pip=26.1.2-r0 \
     python3=3.14.10-r1 \
